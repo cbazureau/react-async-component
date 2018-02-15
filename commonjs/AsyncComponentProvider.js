@@ -49,6 +49,7 @@ var AsyncComponentProvider = function (_React$Component) {
       return {
         asyncComponents: {
           getNextId: this.asyncContext.getNextId,
+          addChunkName: this.asyncContext.addChunkName,
           resolved: this.asyncContext.resolved,
           shouldRehydrate: function shouldRehydrate(id) {
             var resolved = _this2.rehydrateState.resolved[id];
@@ -72,7 +73,9 @@ AsyncComponentProvider.propTypes = {
   children: _propTypes2.default.node.isRequired,
   asyncContext: _propTypes2.default.shape({
     getNextId: _propTypes2.default.func.isRequired,
+    addChunkName: _propTypes2.default.func.isRequired,
     resolved: _propTypes2.default.func.isRequired,
+    getChunkState: _propTypes2.default.func.isRequired,
     getState: _propTypes2.default.func.isRequired
   }),
   rehydrateState: _propTypes2.default.shape({
@@ -90,6 +93,7 @@ AsyncComponentProvider.defaultProps = {
 AsyncComponentProvider.childContextTypes = {
   asyncComponents: _propTypes2.default.shape({
     getNextId: _propTypes2.default.func.isRequired,
+    addChunkName: _propTypes2.default.func.isRequired,
     resolved: _propTypes2.default.func.isRequired,
     shouldRehydrate: _propTypes2.default.func.isRequired
   }).isRequired

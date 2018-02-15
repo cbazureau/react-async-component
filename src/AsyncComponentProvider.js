@@ -13,6 +13,7 @@ class AsyncComponentProvider extends React.Component {
     return {
       asyncComponents: {
         getNextId: this.asyncContext.getNextId,
+        addChunkName: this.asyncContext.addChunkName,
         resolved: this.asyncContext.resolved,
         shouldRehydrate: id => {
           const resolved = this.rehydrateState.resolved[id]
@@ -32,7 +33,9 @@ AsyncComponentProvider.propTypes = {
   children: PropTypes.node.isRequired,
   asyncContext: PropTypes.shape({
     getNextId: PropTypes.func.isRequired,
+    addChunkName: PropTypes.func.isRequired,
     resolved: PropTypes.func.isRequired,
+    getChunkState: PropTypes.func.isRequired,
     getState: PropTypes.func.isRequired,
   }),
   rehydrateState: PropTypes.shape({
@@ -50,6 +53,7 @@ AsyncComponentProvider.defaultProps = {
 AsyncComponentProvider.childContextTypes = {
   asyncComponents: PropTypes.shape({
     getNextId: PropTypes.func.isRequired,
+    addChunkName: PropTypes.func.isRequired,
     resolved: PropTypes.func.isRequired,
     shouldRehydrate: PropTypes.func.isRequired,
   }).isRequired,

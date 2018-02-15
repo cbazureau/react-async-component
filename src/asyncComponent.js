@@ -6,6 +6,7 @@ const validSSRModes = ['resolve', 'defer', 'boundary']
 function asyncComponent(config) {
   const {
     name,
+    chunkName,
     resolve,
     autoResolveES2015Default = true,
     serverMode = 'resolve',
@@ -34,6 +35,8 @@ function asyncComponent(config) {
     error: null,
     // Allows us to share the resolver promise across instances.
     resolver: null,
+    // A unique chunkName
+    chunkName,
   }
 
   // Takes the given module and if it has a ".default" the ".default" will
@@ -47,6 +50,30 @@ function asyncComponent(config) {
       : x
 
   const getResolver = () => {
+    // On browser side, check ASYNC_COMPONENTS_MAP which contains
+    // chunk list with already resolved chunks.
+    // If sharedState.chunkName isn't already resolved, download the css
+    if (env === 'browser' && window.ASYNC_COMPONENTS_MAP) {
+      const resolvedMap = window.ASYNC_COMPONENTS_MAP
+      if (
+        sharedState &&
+        sharedState.chunkName &&
+        resolvedMap[sharedState.chunkName] &&
+        resolvedMap[sharedState.chunkName].css &&
+        resolvedMap[sharedState.chunkName].resolved !== true
+      ) {
+        window.ASYNC_COMPONENTS_MAP[sharedState.chunkName].resolved = true
+        const myCSS = document.createElement('link')
+        myCSS.rel = 'stylesheet'
+        myCSS.href = resolvedMap[sharedState.chunkName].css
+        // insert it at the end of the head in a legacy-friendly manner
+        document.head.insertBefore(
+          myCSS,
+          document.head.childNodes[document.head.childNodes.length - 1]
+            .nextSibling,
+        )
+      }
+    }
     if (sharedState.resolver == null) {
       try {
         // Wrap whatever the user returns in Promise.resolve to ensure a Promise
@@ -70,6 +97,7 @@ function asyncComponent(config) {
       // so the mount call will not happen (but the ctor does).
       if (this.context.asyncComponents != null && !sharedState.id) {
         sharedState.id = this.context.asyncComponents.getNextId()
+        this.context.asyncComponents.addChunkName(sharedState.chunkName)
       }
     }
 
@@ -217,6 +245,7 @@ function asyncComponent(config) {
     }),
     asyncComponents: PropTypes.shape({
       getNextId: PropTypes.func.isRequired,
+      addChunkName: PropTypes.func.isRequired,
       resolved: PropTypes.func.isRequired,
       shouldRehydrate: PropTypes.func.isRequired,
     }),
