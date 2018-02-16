@@ -51,7 +51,9 @@ var AsyncComponentProvider = function (_React$Component) {
           resolved: this.asyncContext.resolved,
           shouldRehydrate: function shouldRehydrate(chunkName) {
             var resolved = _this2.rehydrateState.resolved[chunkName];
-            delete _this2.rehydrateState.resolved[chunkName];
+            // if two components with the same chunkName exists on the same page
+            // note : they should have the same behavior
+            // delete this.rehydrateState.resolved[chunkName]
             return resolved;
           }
         }

@@ -15,7 +15,9 @@ class AsyncComponentProvider extends React.Component {
         resolved: this.asyncContext.resolved,
         shouldRehydrate: chunkName => {
           const resolved = this.rehydrateState.resolved[chunkName]
-          delete this.rehydrateState.resolved[chunkName]
+          // if two components with the same chunkName exists on the same page
+          // note : they should have the same behavior
+          // delete this.rehydrateState.resolved[chunkName]
           return resolved
         },
       },

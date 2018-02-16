@@ -67,13 +67,13 @@ function asyncComponent(config) {
   var getResolver = function getResolver() {
     // On browser side, check ASYNC_COMPONENTS_MAP which contains
     // chunk list with already resolved chunks.
-    // If sharedState.chunkName isn't already resolved, download the css   
+    // If sharedState.chunkName isn't already resolved, download the css
     if (env === 'browser' && window.ASYNC_COMPONENTS_MAP) {
       var resolvedMap = window.ASYNC_COMPONENTS_MAP;
       if (sharedState && sharedState.chunkName && resolvedMap[sharedState.chunkName] && resolvedMap[sharedState.chunkName].css && resolvedMap[sharedState.chunkName].resolved !== true) {
         window.ASYNC_COMPONENTS_MAP[sharedState.chunkName].resolved = true;
-        var myCSS = document.createElement("link");
-        myCSS.rel = "stylesheet";
+        var myCSS = document.createElement('link');
+        myCSS.rel = 'stylesheet';
         myCSS.href = resolvedMap[sharedState.chunkName].css;
         // insert it at the end of the head in a legacy-friendly manner
         document.head.insertBefore(myCSS, document.head.childNodes[document.head.childNodes.length - 1].nextSibling);
