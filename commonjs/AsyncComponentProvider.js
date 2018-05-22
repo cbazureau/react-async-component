@@ -48,11 +48,12 @@ var AsyncComponentProvider = function (_React$Component) {
 
       return {
         asyncComponents: {
-          getNextId: this.asyncContext.getNextId,
           resolved: this.asyncContext.resolved,
-          shouldRehydrate: function shouldRehydrate(id) {
-            var resolved = _this2.rehydrateState.resolved[id];
-            delete _this2.rehydrateState.resolved[id];
+          shouldRehydrate: function shouldRehydrate(chunkName) {
+            var resolved = _this2.rehydrateState.resolved[chunkName];
+            // if two components with the same chunkName exists on the same page
+            // note : they should have the same behavior
+            // delete this.rehydrateState.resolved[chunkName]
             return resolved;
           }
         }
@@ -71,7 +72,6 @@ var AsyncComponentProvider = function (_React$Component) {
 AsyncComponentProvider.propTypes = {
   children: _propTypes2.default.node.isRequired,
   asyncContext: _propTypes2.default.shape({
-    getNextId: _propTypes2.default.func.isRequired,
     resolved: _propTypes2.default.func.isRequired,
     getState: _propTypes2.default.func.isRequired
   }),
@@ -89,7 +89,6 @@ AsyncComponentProvider.defaultProps = {
 
 AsyncComponentProvider.childContextTypes = {
   asyncComponents: _propTypes2.default.shape({
-    getNextId: _propTypes2.default.func.isRequired,
     resolved: _propTypes2.default.func.isRequired,
     shouldRehydrate: _propTypes2.default.func.isRequired
   }).isRequired
